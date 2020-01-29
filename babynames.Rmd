@@ -1,0 +1,39 @@
+---
+title: "Baby Names"
+author: "Pieter Quinton"
+date: "1/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(babynames)
+library(tidyverse)
+```
+
+```{r}
+
+babynames <- babynames
+
+popular <- babynames %>%
+  filter(year == 2017) %>%
+  group_by(name) %>%
+  summarize(n = sum(n)) %>%
+  arrange(desc(n)) %>%
+  head(100)
+
+babynames_pop <- babynames %>%
+  filter(name %in% popular$name) %>%
+  group_by(year) %>%
+  summarize(avg = mean(prop)) %>%
+  arrange(desc(avg)) %>%
+  ggplot(aes(x = year, y = avg)) +
+    geom_point() + 
+    geom_smooth()
+
+babynames_pop
+```
+
